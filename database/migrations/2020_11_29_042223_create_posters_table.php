@@ -20,7 +20,7 @@ class CreatePostersTable extends Migration
             $table->string('description');
             $table->unsignedBigInteger('price');
             $table->string('country');
-            $table0->string('location');
+            $table->string('location');
             $table->string('detail_location');
             $table->string('website')->nullable();
             $table->string('facebook')->nullable();
@@ -29,7 +29,7 @@ class CreatePostersTable extends Migration
             $table->string('category');
             $table->timestamps();
 
-            $table->$table->foreign('owner')->references('id')->on('users');
+            $table->foreign('owner')->references('id')->on('users');
         });
     }
 
