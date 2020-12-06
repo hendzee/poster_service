@@ -11,12 +11,13 @@ class UserController extends Controller
     public function index(Request $request) {
         try {
             $user = User::all();
-
-            return $user;
-        } catch (\Throwable $th) {
-            $response['message'] = 'Failed to get data user';
             
-            return response()->json($response, 500); 
+            return $this->getResponse($response);
+        } catch (\Throwable $th) {
+            $message = 'Failed to get data user';
+            $errorCode = 500;
+
+            return $this->getErrorResponse($message, $errorCode); 
         }
     }
 
@@ -37,8 +38,12 @@ class UserController extends Controller
             return $request;
         } catch (\Throwable $th) {
             $response['message'] = 'Failed to store data';
+
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
             
-            return response()->json($response, 500);
+            return response()->json($th, 500);
         }
     }
 
