@@ -11,23 +11,13 @@ class UserController extends Controller
     public function index(Request $request) {
         try {
             $user = User::all();
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->password = $request->password;
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->photo = $request->photo;
-            $user->country = $request->country;
-            $user->save();
 
-            return $request;
+            return $user;
         } catch (\Throwable $th) {
             $response['message'] = 'Failed to get data user';
             
             return response()->json($response, 500); 
         }
-
-        return $user;
     }
 
     /** Store data user */
