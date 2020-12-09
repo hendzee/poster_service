@@ -33,18 +33,26 @@ class Controller extends BaseController
         $errorCode = 500;
 
         switch ($dbErrorCode) {
+            // Required data not filled
             case 1048:
                 $message = $errorMessage;
                 break;
-
+            
+            // Data was redundant
             case 1062:
                 $message = 'Data was exist (redundant)';
                 break;
             
+            // References data not found on table
+            case 1452:
+                $message = 'Error references data, please contact the admin';
+                break;
+            
             default:
+                $message = "Error with code $dbErrorCode";
                 break;
         }
-        
+
         $response['error'] = 'Error';
         $response['message'] = $message;
 
