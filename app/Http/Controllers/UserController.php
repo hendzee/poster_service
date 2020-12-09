@@ -19,7 +19,7 @@ class UserController extends Controller
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
             
-            return $this->simpleResponseError();
+            return $this->simpleErrorResponse();
         }
     }
 
@@ -43,7 +43,7 @@ class UserController extends Controller
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
             
-            return $this->simpleResponseError();
+            return $this->simpleErrorResponse();
         }
     }
 
@@ -71,7 +71,7 @@ class UserController extends Controller
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
             
-            return $this->simpleResponseError();
+            return $this->simpleErrorResponse();
         }
     }
 }
