@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "868f973fa364349a2f824d1495cd9ff4",
+    "content-hash": "d96c978b8e9ce04a971f449d327735b5",
     "packages": [
+        {
+            "name": "anik/form-request",
+            "version": "v3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ssi-anik/form-request.git",
+                "reference": "f11e35c94d05bfe0336851f2939cf7318d78f090"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ssi-anik/form-request/zipball/f11e35c94d05bfe0336851f2939cf7318d78f090",
+                "reference": "f11e35c94d05bfe0336851f2939cf7318d78f090",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5|^6.0|^7.0|^8.0",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Anik\\Form\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Syed Sirajul Islam Anik",
+                    "email": "sirajul.islam.anik@gmail.com"
+                }
+            ],
+            "description": "Form request is a package for Lumen that lets developer validate form requests like Laravel does.",
+            "keywords": [
+                "form-request",
+                "lumen",
+                "validation"
+            ],
+            "time": "2020-11-08T10:58:24+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.9.1",
