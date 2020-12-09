@@ -112,4 +112,19 @@ class PosterController extends Controller
             return $this->simpleErrorResponse();
         }
     }
+
+    /** Delete data poster from database */
+    public function destroy($id) {
+        try {
+            Poster::destroy($id);
+
+            return $this->simpleResponse($id, 'Poster was removed');
+        } catch (\Throwable $th) {
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+            
+            return $this->simpleErrorResponse();
+        }
+    }
 }
