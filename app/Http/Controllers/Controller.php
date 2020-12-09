@@ -6,21 +6,22 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    /** Simple response */
-    public function getResponse($data) {
+    /** Pagination response */
+    public function paginationResponse($data) {
         return response()->json($data, 200);
     }
 
-    /** Simple response with message */
-    public function getResponseWithMessage($data, $message) {
-        $response['message'] = $message;
-        $response['data'] = $data;
+    /** Simple response (with message) */
+    public function simpleResponse($data, $message='Successful') {
+        $finalData['data'] = $data;
+        $finalData['message'] = $message;
 
-        return response()->json($data, 200);
+        return response()->json($finalData, 200);
     }
 
     /** Simple error response */
-    public function getErrorResponse($message, $errorCode) {
+    public function simpleErrorResponse($message='Something went wrong, please refresh again.', $errorCode=500) {
+        $response['error'] = 'Error';
         $response['message'] = $message;
 
         return response()->json($response, $errorCode);
@@ -37,13 +38,14 @@ class Controller extends BaseController
                 break;
 
             case 1062:
-                $message = 'Data was redundant';
+                $message = 'Data was exist (redundant)';
                 break;
             
             default:
                 break;
         }
-
+        
+        $response['error'] = 'Error';
         $response['message'] = $message;
 
         return response()->json($response, $errorCode);
