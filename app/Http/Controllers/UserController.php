@@ -7,17 +7,19 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    private $numPage = 5;
+
     /** Get all data user */
     public function index(Request $request) {
         try {
-            $user = User::all();
-            
-            return $this->getResponse($response);
+            $users = User::paginate($this->numPage);
+            return $this->paginationResponse($users);
         } catch (\Throwable $th) {
-            $message = 'Failed to get data user';
-            $errorCode = 500;
-
-            return $this->getErrorResponse($message, $errorCode); 
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+            
+            return $this->simpleResponseError();
         }
     }
 
@@ -35,22 +37,24 @@ class UserController extends Controller
             $user->country = $request->country;
             $user->save();
     
-            return $request;
+            return $this->simpleResponse($user);
         } catch (\Throwable $th) {
-            $response['message'] = 'Failed to store data';
-
             if (property_exists($th, 'errorInfo')) {
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
             
-            return response()->json($th, 500);
+            return $this->simpleResponseError();
         }
     }
 
     /** Update data user */
     public function update(Request $request, $id) {
         try {
-            $user = User::findOrFail($id);
+            $user = User::find($id);
+
+            if (!$user) {
+                return $this->simpleErrorResponse('User not found on database', 500);
+            }
 
             $user->email = $request->email;
             $user->phone = $request->phone;
@@ -61,11 +65,13 @@ class UserController extends Controller
             $user->country = $request->country;
             $user->save();
 
-            return $request;   
+            return $this->simpleResponse($user, 'Data user was updated');   
         } catch (\Throwable $th) {
-            $response['message'] = 'Failed to store data';
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
             
-            return response()->json($response, 500);
+            return $this->simpleResponseError();
         }
     }
 }
