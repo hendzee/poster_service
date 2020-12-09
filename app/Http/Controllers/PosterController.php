@@ -7,15 +7,28 @@ use App\Models\Poster;
 
 class PosterController extends Controller
 {
-    /** Get all data poster */
+    private $numPage = 5;
+
+    /** Get all data poster by country */
     public function index(Request $request) {
-        $poster = Poster::all();
+        try {
+            $country = $request->country;
+            $posters = Poster::where('country', strtoupper($country));
 
-        if ($request->has('country')) {
-            $poster = Poster::where('country', $request->country)
-            ->paginate(6);
+            /** If has category filter */
+            if ($request->has('category')) {
+                $posters = $posters->where('category', strtoupper($request->category));
+            }
+            
+            $posters = $posters->paginate($this->numPage);
+    
+            return $this->paginationResponse($posters);
+        } catch (\Throwable $th) {
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+            
+            return $this->simpleResponseError();
         }
-
-        return $poster;
     }
 }
