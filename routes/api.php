@@ -6,6 +6,7 @@
 
     /** Posters route */
     Route::get('posters', ['uses' => 'PosterController@index']);
+    Route::get('posters/trending', ['uses' => 'PosterController@getTrendingPoster']);
     Route::post('posters', ['uses' => 'PosterController@store']);
     Route::get('posters/{id}', ['uses' => 'PosterController@show']);
     Route::put('posters/{id}', ['uses' => 'PosterController@update']);
