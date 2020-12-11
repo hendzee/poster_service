@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Poster;
+use DB;
 
 class PosterController extends Controller
 {
@@ -30,6 +31,22 @@ class PosterController extends Controller
             
             return $this->simpleErrorResponse();
         }
+    }
+
+    /** Get trending poster */
+    public function getTrendingPoster(Request $request) {
+        $country = $request->country;
+
+        $posters = DB::table('posters')
+            ->rightJoin('subscribers', 'subscribers.poster', '=', 'posters.id')
+            ->select('subscribers.poster', DB::raw('COUNT(subscribers.subscriber) AS total_subscriber'))
+            ->groupBy('subscribers.poster')
+            ->orderBy('total_subscriber', 'DESC')
+            ->first();
+
+        $trendingPoster = Poster::find($posters->poster);
+        
+        return $this->simpleResponse($trendingPoster);
     }
 
     /** Store poster data */
