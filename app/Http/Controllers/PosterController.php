@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Poster;
+use App\Models\Subscriber;
 use DB;
 
 class PosterController extends Controller
@@ -35,8 +36,40 @@ class PosterController extends Controller
 
     /** Get trending poster */
     public function getTrendingPoster(Request $request) {
-        $country = $request->country;
+        try {
+            $country = $request->country;
 
+            $subscribers = Subscriber::all();
+
+            if ($subscribers->isEmpty()) {
+                return $this->simpleResponse($this->handleDataTrendingEmptySub()); 
+            }
+
+            $posters = $this->hanldeDataTrendingSub();
+
+            $trendingPoster = Poster::find($posters->poster);
+            
+            return $this->simpleResponse($trendingPoster);
+        } catch (\Throwable $th) {
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+
+            return $this->simpleErrorResponse();
+        }
+    }
+
+    /** Handle data trending if subsriber 
+    * table is empty */
+    private function handleDataTrendingEmptySub() {
+        $posters = Poster::all();
+
+        return $posters->first();
+    }
+
+    /** Handle data trending if subscriber
+    * table is NOT empty */
+    private function hanldeDataTrendingSub() {
         $posters = DB::table('posters')
             ->rightJoin('subscribers', 'subscribers.poster', '=', 'posters.id')
             ->select('subscribers.poster', DB::raw('COUNT(subscribers.subscriber) AS total_subscriber'))
@@ -44,10 +77,9 @@ class PosterController extends Controller
             ->orderBy('total_subscriber', 'DESC')
             ->first();
 
-        $trendingPoster = Poster::find($posters->poster);
-        
-        return $this->simpleResponse($trendingPoster);
+        return $posters;
     }
+    
 
     /** Store poster data */
     public function store(Request $request) {
