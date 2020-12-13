@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Poster;
 use App\Models\Subscriber;
-use DB;
 
 class PosterController extends Controller
 {
