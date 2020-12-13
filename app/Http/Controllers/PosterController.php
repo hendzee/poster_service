@@ -15,11 +15,11 @@ class PosterController extends Controller
     public function index(Request $request) {
         try {
             $country = $request->country;
-            $posters = Poster::where('country', strtoupper($country));
+            $posters = Poster::where('country', $country);
 
             /** If has category filter */
             if ($request->has('category')) {
-                $posters = $posters->where('category', strtoupper($request->category));
+                $posters = $posters->where('category', $request->category);
             }
             
             $posters = $posters->paginate($this->numPage);
