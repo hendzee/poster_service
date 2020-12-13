@@ -170,7 +170,7 @@ class PosterController extends Controller
     /** Show specific poster data */
     public function show($id) {
         try {
-            $poster = Poster::find($id);
+            $poster = Poster::with('user')->find($id);
 
             if (!$poster) {
                 return $this->simpleResponse($poster, 'Data not found');
