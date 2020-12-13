@@ -23,6 +23,22 @@ class UserController extends Controller
         }
     }
 
+    /** Get user's poster */
+    public function getUserPoster(Request $request) {
+        try {
+            $user = User::where('id', $request->id)->first();
+            $userPosters = $user->posters()->paginate($this->numPage);
+        
+            return $this->paginationResponse($userPosters);
+        } catch (\Throwable $th) {
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+            
+            return $this->simpleErrorResponse();
+        }
+    }
+
     /** Store data user */
     public function store(Request $request) {
         try {
