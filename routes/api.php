@@ -1,6 +1,7 @@
 <?php
     /** Users route */
     Route::get('users', ['uses' => 'UserController@index']);
+    Route::get('users/posters', ['uses' => 'UserController@getUserPoster']);
     Route::post('users', ['uses' => 'UserController@store']);
     Route::put('users/{id}', ['uses' => 'UserController@update']);
 
