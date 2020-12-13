@@ -80,6 +80,31 @@ class PosterController extends Controller
         return $posters;
     }
     
+    /** Get recomendation data. Currently data get by  
+    * random query */
+    public function getRecommendationPoster(Request $request) {
+        try {
+            $posters = Poster::all();
+            $limit = 3; // Number of item limitation to get
+
+            if ($posters->isEmpty()) {
+                return $this->simpleResponse(null);
+            }
+
+            $poster = Poster::inRandomOrder()
+                ->where('country', $request->country)    
+                ->limit($limit)
+                ->get();
+
+            return $this->simpleResponse($poster);   
+        } catch (\Throwable $th) {
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+
+            return $this->simpleErrorResponse();
+        }
+    }
 
     /** Store poster data */
     public function store(Request $request) {
