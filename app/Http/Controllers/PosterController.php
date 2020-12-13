@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Poster;
 use App\Models\Subscriber;
+use DB;
 
 class PosterController extends Controller
 {
@@ -21,7 +22,7 @@ class PosterController extends Controller
                 $posters = $posters->where('category', $request->category);
             }
             
-            $posters = $posters->paginate($this->numPage);
+            $posters = $posters->with('user')->paginate($this->numPage);
     
             return $this->paginationResponse($posters);
         } catch (\Throwable $th) {
@@ -46,14 +47,13 @@ class PosterController extends Controller
 
             $posters = $this->hanldeDataTrendingSub();
 
-            $trendingPoster = Poster::find($posters->poster);
+            $trendingPoster = Poster::with('user')->find($posters->poster);
             
             return $this->simpleResponse($trendingPoster);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
-
             return $this->simpleErrorResponse();
         }
     }
@@ -63,7 +63,7 @@ class PosterController extends Controller
     private function handleDataTrendingEmptySub() {
         $posters = Poster::all();
 
-        return $posters->first();
+        return $posters->with('user')->first();
     }
 
     /** Handle data trending if subscriber
