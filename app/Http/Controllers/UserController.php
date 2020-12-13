@@ -26,8 +26,10 @@ class UserController extends Controller
     /** Get user's poster */
     public function getUserPoster(Request $request) {
         try {
-            $user = User::where('id', $request->id)->first();
-            $userPosters = $user->posters()->paginate($this->numPage);
+            $user = User::where('id', $request->id)->first(); // id is user id
+            $userPosters = $user->posters()
+                ->with('user')
+                ->paginate($this->numPage);
         
             return $this->paginationResponse($userPosters);
         } catch (\Throwable $th) {
@@ -37,6 +39,17 @@ class UserController extends Controller
             
             return $this->simpleErrorResponse();
         }
+    }
+
+    /** Get user subcription */
+    public function getUserSubscription(Request $request) {
+        $user = User::find($request->id); // id is user id
+
+        $subscriptions = $user->subscribers()
+            ->with('user')
+            ->paginate($this->numPage);
+
+        return $this->paginationResponse($subscriptions);   
     }
 
     /** Store data user */
