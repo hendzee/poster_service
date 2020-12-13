@@ -25,4 +25,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function posters() {
         return $this->hasMany(Poster::class, 'owner');
     }
+
+    public function subscribers()
+    {
+        return $this->belongsToMany(Poster::class, 'subscribers', 'subscriber', 'poster');
+    }
 }
