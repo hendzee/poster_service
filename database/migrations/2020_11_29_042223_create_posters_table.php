@@ -29,7 +29,7 @@ class CreatePostersTable extends Migration
             $table->string('category');
             $table->timestamps();
 
-            $table->foreign('owner')->references('id')->on('users');
+            $table->foreign('owner')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
