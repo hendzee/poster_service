@@ -19,8 +19,8 @@ class CreateSubscribersTable extends Migration
             $table->unsignedBigInteger('subscriber');
             $table->timestamps();
 
-            $table->foreign('poster')->references('id')->on('posters');
-            $table->foreign('subscriber')->references('id')->on('users');
+            $table->foreign('poster')->references('id')->on('posters')->onDelete('cascade');
+            $table->foreign('subscriber')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
