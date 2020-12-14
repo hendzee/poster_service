@@ -52,6 +52,24 @@ class UserController extends Controller
         return $this->paginationResponse($subscriptions);   
     }
 
+    /** Get user notification */
+    public function getUserNotification(Request $request) {
+        try {
+            $user = User::find($request->id); // id is user id
+
+            $notifications = $user->notifications()->paginate($this->numPage);
+
+            return $this->paginationResponse($notifications);
+
+        } catch (\Throwable $th) {
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+            
+            return $this->simpleErrorResponse();
+        }   
+    }
+
     /** Store data user */
     public function store(Request $request) {
         try {
