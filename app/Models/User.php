@@ -30,4 +30,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->belongsToMany(Poster::class, 'subscribers', 'subscriber', 'poster');
     }
+
+    public function notifications() {
+        return $this->hasMany(Notification::class, 'receiver');
+    }
 }
