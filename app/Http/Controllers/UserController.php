@@ -41,6 +41,7 @@ class UserController extends Controller
         }
     }
 
+
     /** Get user subcription */
     public function getUserSubscription(Request $request) {
         $user = User::find($request->id); // id is user id

@@ -1,4 +1,7 @@
 <?php
+    /** Auth route */
+    Route::get('users/login', ['uses' => 'AuthController@login']); //Login user
+
     /** Users route */
     Route::get('users', ['uses' => 'UserController@index']); // Get user
     Route::get('users/posters', ['uses' => 'UserController@getUserPoster']); // Get user's poster
