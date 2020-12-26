@@ -19,7 +19,7 @@ class AuthController extends Controller
 
                     return $this->simpleResponse($data);
                 }else {
-                    return $this->simpleErrorResponse();
+                    return $this->simpleErrorResponse('Password incorect');
                 }
             }
 
