@@ -1,6 +1,7 @@
 <?php
     /** Auth route */
-    Route::get('users/login', ['uses' => 'AuthController@login']); //Login user
+    Route::get('users/login', ['uses' => 'AuthController@login']); // Login user
+    Route::post('users/signup', ['uses' => 'AuthController@signup']); // Signup user
 
     /** Users route */
     Route::get('users', ['uses' => 'UserController@index']); // Get user
