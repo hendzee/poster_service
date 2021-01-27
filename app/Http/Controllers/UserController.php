@@ -104,13 +104,48 @@ class UserController extends Controller
                 return $this->simpleErrorResponse('User not found on database', 500);
             }
 
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->password = $request->password;
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->photo = $request->photo;
-            $user->country = $request->country;
+            if ($request->has('email')) {
+                $user->email = $request->email;
+            }
+
+            if ($request->has('phone')) {
+                $user->phone = $request->phone;
+            }
+
+            if ($request->has('password')) {
+                $user->password = $request->password;
+            }
+
+            if ($request->has('first_name')) {
+                $user->first_name = $request->first_name;
+            }
+
+            if ($request->has('last_name')) {
+                $user->last_name = $request->last_name;
+            }
+
+            if ($request->has('photo')) {
+                $this->validate($request, [
+                    'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4048'
+                ]);
+
+                $imageName = '';
+
+                if ($request->file('photo')) {
+                    $imagePath = $request->file('photo');
+                    $imageName = $request->user_id . time() . $imagePath->getClientOriginalName();
+          
+                    $path = $request->file('photo')->storeAs('images', $imageName);
+                }
+    
+                $user->photo = env('APP_URL') . '/storage/app/images/' . $imageName;
+                
+            }
+            
+            if ($request->has('country')) {
+                $user->country = $request->country;
+            }
+            
             $user->save();
 
             return $this->simpleResponse($user, 'Data user was updated');   
@@ -118,8 +153,8 @@ class UserController extends Controller
             if (property_exists($th, 'errorInfo')) {
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
-            
-            return $this->simpleErrorResponse();
+            return $th;
+            // return $this->simpleErrorResponse();
         }
     }
 }

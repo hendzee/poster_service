@@ -2,14 +2,13 @@
     /** Auth route */
     Route::get('users/login', ['uses' => 'AuthController@login']); // Login user
     Route::post('users/signup', ['uses' => 'AuthController@signup']); // Signup user
-
+    Route::post('users/{id}', ['uses' => 'UserController@update']); // Update user by id
     /** Users route */
     Route::get('users', ['uses' => 'UserController@index']); // Get user
     Route::get('users/posters', ['uses' => 'UserController@getUserPoster']); // Get user's poster
     Route::get('users/subscriptions', ['uses' => 'UserController@getUserSubscription']); // Get user's subscription
     Route::get('users/notifications', ['uses' => 'UserController@getUserNotification']); // Get user's notifications
     Route::post('users', ['uses' => 'UserController@store']); // Store new user
-    Route::put('users/{id}', ['uses' => 'UserController@update']); // Update user by id
 
     /** Posters route */
     Route::get('posters', ['uses' => 'PosterController@index']); // Get poster

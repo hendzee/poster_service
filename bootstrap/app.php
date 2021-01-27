@@ -99,6 +99,12 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
+
+$adapter = new League\Flysystem\Adapter\Local(__DIR__.'/myfiles');
+$filesystem = new Filesystem($adapter);
+
 $app->configure('auth');
 
 /*
