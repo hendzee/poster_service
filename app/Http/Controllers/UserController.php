@@ -153,8 +153,7 @@ class UserController extends Controller
             if (property_exists($th, 'errorInfo')) {
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
-            return $th;
-            // return $this->simpleErrorResponse();
+            return $this->simpleErrorResponse();
         }
     }
 }
