@@ -18,6 +18,7 @@ class CreatePostersTable extends Migration
             $table->unsignedBigInteger('owner');
             $table->string('title');
             $table->string('description');
+            $table->string('image');
             $table->unsignedBigInteger('price');
             $table->string('country');
             $table->string('location');
