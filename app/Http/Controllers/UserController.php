@@ -138,7 +138,7 @@ class UserController extends Controller
                     $path = $request->file('photo')->storeAs('images', $imageName);
                 }
     
-                $user->photo = env('APP_URL') . '/storage/app/images/' . $imageName;
+                $user->photo = env('APP_URL') . '/storage/app/images/profiles/' . $imageName;
                 
             }
             
