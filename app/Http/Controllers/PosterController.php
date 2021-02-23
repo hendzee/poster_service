@@ -42,7 +42,7 @@ class PosterController extends Controller
             $subscribers = Subscriber::all();
 
             if ($subscribers->isEmpty()) {
-                return $this->simpleResponse($this->handleDataTrendingEmptySub()); 
+                return $this->simpleResponse($this->handleDataTrendingEmptySub());
             }
 
             $posters = $this->hanldeDataTrendingSub();
@@ -61,9 +61,11 @@ class PosterController extends Controller
     /** Handle data trending if subsriber 
     * table is empty */
     private function handleDataTrendingEmptySub() {
-        $posters = Poster::all();
+        $poster = DB::table('posters')
+            ->join('users', 'posters.owner', '=', 'users.id')
+            ->first();
 
-        return $posters->with('user')->first();
+        return $poster;
     }
 
     /** Handle data trending if subscriber
@@ -90,9 +92,12 @@ class PosterController extends Controller
                 return $this->simpleResponse(null);
             }
 
-            $poster = Poster::inRandomOrder()
-                ->where('country', $request->country)    
+            $poster = DB::table('posters')
+                ->join('users', 'posters.owner', '=', 'users.id')
+                ->where('posters.country', $request->country)
+                ->inRandomOrder()
                 ->limit($limit)
+                ->select('posters.*', 'users.photo as photo')
                 ->get();
 
             return $this->simpleResponse($poster);   
