@@ -30,7 +30,7 @@ class PosterSeeder extends Seeder
             $image = env('APP_URL') . '/storage/app/images/posters/' . $posterImages[rand(0, 5)];
 
             DB::table('posters')->insert([
-                'owner' => 1,
+                'owner' => rand(1, 3),
                 'title' => $faker->sentence($nbWords = rand(1, 3), $variableNbWords = true) ,
                 'description' => $faker->text($maxNbChars = 200),
                 'start_date' => '2021-03-01 19:28:21',
