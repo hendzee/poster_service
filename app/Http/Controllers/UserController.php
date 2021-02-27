@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use DB;
 
 class UserController extends Controller
 {
@@ -26,13 +27,17 @@ class UserController extends Controller
     /** Get user's poster */
     public function getUserPoster(Request $request) {
         try {
-            $user = User::where('id', $request->id)->first(); // id is user id
-            $userPosters = $user->posters()
-                ->with('user')
-                ->paginate($this->numPage);
+            $userPosters = DB::table('posters')
+                ->join('users', 'posters.owner', '=', 'users.id') 
+                ->where('users.id', $request->id);
+            
+            $userPosters->select('posters.*', 'users.photo as photo');
+
+            $userPosters = $userPosters->paginate($this->numPage);
         
             return $this->paginationResponse($userPosters);
         } catch (\Throwable $th) {
+            return $th;
             if (property_exists($th, 'errorInfo')) {
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }

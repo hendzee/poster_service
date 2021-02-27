@@ -14,15 +14,19 @@ class PosterController extends Controller
     /** Get all data poster by country */
     public function index(Request $request) {
         try {
+            $posters = DB::table('posters')
+                ->join('users', 'posters.owner', '=', 'users.id');
+
             $country = $request->country;
-            $posters = Poster::where('country', $country);
+            $posters->where('posters.country', $country);
 
             /** If has category filter */
             if ($request->has('category')) {
                 $posters = $posters->where('category', $request->category);
             }
             
-            $posters = $posters->with('user')->paginate($this->numPage);
+            $posters->select('posters.*', 'users.photo as photo');
+            $posters = $posters->paginate($this->numPage);
     
             return $this->paginationResponse($posters);
         } catch (\Throwable $th) {
@@ -63,6 +67,7 @@ class PosterController extends Controller
     private function handleDataTrendingEmptySub() {
         $poster = DB::table('posters')
             ->join('users', 'posters.owner', '=', 'users.id')
+            ->select('posters.*', 'users.photo as photo')
             ->first();
 
         return $poster;
