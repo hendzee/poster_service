@@ -49,13 +49,15 @@ class UserController extends Controller
 
     /** Get user subcription */
     public function getUserSubscription(Request $request) {
-        $user = User::find($request->id); // id is user id
+        $subscribers = DB::table('posters')
+            ->join('users', 'posters.owner', '=', 'users.id')
+            ->join('subscribers', 'posters.id', '=', 'subscribers.poster')
+            ->where('subscribers.subscriber', $request->id);
+        
+        $subscribers->select('posters.*', 'users.photo as photo');
+        $subscribers = $subscribers->paginate($this->numPage);
 
-        $subscriptions = $user->subscribers()
-            ->with('user')
-            ->paginate($this->numPage);
-
-        return $this->paginationResponse($subscriptions);   
+        return $this->paginationResponse($subscribers);   
     }
 
     /** Get user notification */

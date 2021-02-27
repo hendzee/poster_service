@@ -49,10 +49,8 @@ class PosterController extends Controller
                 return $this->simpleResponse($this->handleDataTrendingEmptySub());
             }
 
-            $posters = $this->hanldeDataTrendingSub();
+            $trendingPoster = $this->hanldeDataTrendingSub();
 
-            $trendingPoster = Poster::with('user')->find($posters->poster);
-            
             return $this->simpleResponse($trendingPoster);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
@@ -77,10 +75,8 @@ class PosterController extends Controller
     * table is NOT empty */
     private function hanldeDataTrendingSub() {
         $posters = DB::table('posters')
-            ->rightJoin('subscribers', 'subscribers.poster', '=', 'posters.id')
-            ->select('subscribers.poster', DB::raw('COUNT(subscribers.subscriber) AS total_subscriber'))
-            ->groupBy('subscribers.poster')
-            ->orderBy('total_subscriber', 'DESC')
+            ->join('users', 'posters.owner', '=', 'users.id')
+            ->join('subscribers', 'subscribers.poster', '=', 'posters.id')
             ->first();
 
         return $posters;
