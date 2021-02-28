@@ -15,6 +15,8 @@
     Route::get('posters', ['uses' => 'PosterController@index']); // Get poster
     Route::get('posters/trending', ['uses' => 'PosterController@getTrendingPoster']); // Get trending poster
     Route::get('posters/recommendation', ['uses' => 'PosterController@getRecommendationPoster']); // Get recommendation poster
+    Route::get('posters/search', ['uses' => 'PosterController@getSugestionSearch']); // Get sugestion search
+    Route::get('posters/search_result', ['uses' => 'PosterController@getSearchResult']); // Get search result
     Route::post('posters', ['uses' => 'PosterController@store']); // Store new poster
     Route::get('posters/{id}', ['uses' => 'PosterController@show']); // Show detail poster
     Route::put('posters/{id}', ['uses' => 'PosterController@update']); // Update poster by id

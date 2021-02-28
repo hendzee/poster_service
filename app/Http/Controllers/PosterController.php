@@ -101,8 +101,50 @@ class PosterController extends Controller
                 ->select('posters.*', 'users.photo as photo')
                 ->get();
 
-            return $this->simpleResponse($poster);   
+            return $this->simpleResponse($poster); 
         } catch (\Throwable $th) {
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+
+            return $this->simpleErrorResponse();
+        }
+    }
+
+    /** Get sugestion */
+    public function getSugestionSearch(Request $request) {
+        $limit = 10;
+
+        try {
+            $searchPosters = Poster::where('title', 'like', "$request->keyword%")
+                ->select('title')
+                ->limit($limit)
+                ->get();
+            
+            return $this->simpleResponse($searchPosters); 
+        } catch (\Throwable $th) {
+            return $th;
+            if (property_exists($th, 'errorInfo')) {
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+            }
+
+            return $this->simpleErrorResponse();
+        }
+    }
+
+    /** Get search result */
+    public function getSearchResult(Request $request) {
+        try {
+            $searchPosters = DB::table('posters')
+                ->join('users', 'posters.owner', 'users.id')
+                ->where('title', 'like', "$request->keyword%");
+            
+            $searchPosters->select('posters.*', 'users.photo as photo');
+            $searchPosters = $searchPosters->paginate($this->numPage);
+    
+            return $this->paginationResponse($searchPosters);
+        } catch (\Throwable $th) {
+            return $th;
             if (property_exists($th, 'errorInfo')) {
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
             }
