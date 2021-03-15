@@ -137,6 +137,7 @@ class PosterController extends Controller
         try {
             $searchPosters = DB::table('posters')
                 ->join('users', 'posters.owner', 'users.id')
+                ->where('posters.country', $request->country)
                 ->where('title', 'like', "$request->keyword%");
             
             $searchPosters->select('posters.*', 'users.photo as photo');
