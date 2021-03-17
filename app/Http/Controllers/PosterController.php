@@ -166,11 +166,31 @@ class PosterController extends Controller
             $poster->country = $request->country;
             $poster->location = $request->location;
             $poster->detail_location = $request->detail_location;
+            $poster->start_date = $request->start_date;
+            $poster->end_date = $request->end_date;
             $poster->website = $request->website;
             $poster->facebook = $request->facebook;
             $poster->instagram = $request->instagram;
             $poster->twitter = $request->twitter;
             $poster->category = $request->category;
+
+            if ($request->has('image')) {
+                $this->validate($request, [
+                    'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4048'
+                ]);
+
+                $imageName = '';
+
+                if ($request->file('image')) {
+                    $imagePath = $request->file('image');
+                    $imageName = $request->owner . time() . $imagePath->getClientOriginalName();
+          
+                    $path = $request->file('image')->storeAs('images/posters', $imageName);
+                }
+    
+                $poster->image = env('APP_URL') . '/storage/app/images/posters/' . $imageName;      
+            }
+
             $poster->save();
 
             return $this->simpleResponse($poster);

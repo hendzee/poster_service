@@ -142,7 +142,7 @@ class UserController extends Controller
                     $imagePath = $request->file('photo');
                     $imageName = $request->user_id . time() . $imagePath->getClientOriginalName();
           
-                    $path = $request->file('photo')->storeAs('images', $imageName);
+                    $path = $request->file('photo')->storeAs('images/profiles', $imageName);
                 }
     
                 $user->photo = env('APP_URL') . '/storage/app/images/profiles/' . $imageName;
