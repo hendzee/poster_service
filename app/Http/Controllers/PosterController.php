@@ -12,7 +12,8 @@ class PosterController extends Controller
     private $numPage = 5;
 
     /** Get all data poster by country */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             $posters = DB::table('posters')
                 ->join('users', 'posters.owner', '=', 'users.id');
@@ -24,22 +25,23 @@ class PosterController extends Controller
             if ($request->has('category')) {
                 $posters = $posters->where('category', $request->category);
             }
-            
+
             $posters->select('posters.*', 'users.photo as photo');
             $posters = $posters->paginate($this->numPage);
-    
+
             return $this->paginationResponse($posters);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
-            
+
             return $this->simpleErrorResponse();
         }
     }
 
     /** Get trending poster */
-    public function getTrendingPoster(Request $request) {
+    public function getTrendingPoster(Request $request)
+    {
         try {
             $country = $request->country;
 
@@ -54,15 +56,16 @@ class PosterController extends Controller
             return $this->simpleResponse($trendingPoster);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
             return $this->simpleErrorResponse();
         }
     }
 
     /** Handle data trending if subsriber 
-    * table is empty */
-    private function handleDataTrendingEmptySub() {
+     * table is empty */
+    private function handleDataTrendingEmptySub()
+    {
         $poster = DB::table('posters')
             ->join('users', 'posters.owner', '=', 'users.id')
             ->select('posters.*', 'users.photo as photo')
@@ -72,8 +75,9 @@ class PosterController extends Controller
     }
 
     /** Handle data trending if subscriber
-    * table is NOT empty */
-    private function hanldeDataTrendingSub() {
+     * table is NOT empty */
+    private function hanldeDataTrendingSub()
+    {
         $posters = DB::table('posters')
             ->join('users', 'posters.owner', '=', 'users.id')
             ->join('subscribers', 'subscribers.poster', '=', 'posters.id')
@@ -81,10 +85,11 @@ class PosterController extends Controller
 
         return $posters;
     }
-    
+
     /** Get recomendation data. Currently data get by  
-    * random query */
-    public function getRecommendationPoster(Request $request) {
+     * random query */
+    public function getRecommendationPoster(Request $request)
+    {
         try {
             $posters = Poster::all();
             $limit = 3; // Number of item limitation to get
@@ -101,10 +106,10 @@ class PosterController extends Controller
                 ->select('posters.*', 'users.photo as photo')
                 ->get();
 
-            return $this->simpleResponse($poster); 
+            return $this->simpleResponse($poster);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
 
             return $this->simpleErrorResponse();
@@ -112,7 +117,8 @@ class PosterController extends Controller
     }
 
     /** Get sugestion */
-    public function getSugestionSearch(Request $request) {
+    public function getSugestionSearch(Request $request)
+    {
         $limit = 10;
 
         try {
@@ -120,12 +126,12 @@ class PosterController extends Controller
                 ->select('title')
                 ->limit($limit)
                 ->get();
-            
-            return $this->simpleResponse($searchPosters); 
+
+            return $this->simpleResponse($searchPosters);
         } catch (\Throwable $th) {
             return $th;
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
 
             return $this->simpleErrorResponse();
@@ -133,21 +139,22 @@ class PosterController extends Controller
     }
 
     /** Get search result */
-    public function getSearchResult(Request $request) {
+    public function getSearchResult(Request $request)
+    {
         try {
             $searchPosters = DB::table('posters')
                 ->join('users', 'posters.owner', 'users.id')
                 ->where('posters.country', $request->country)
                 ->where('title', 'like', "$request->keyword%");
-            
+
             $searchPosters->select('posters.*', 'users.photo as photo');
             $searchPosters = $searchPosters->paginate($this->numPage);
-    
+
             return $this->paginationResponse($searchPosters);
         } catch (\Throwable $th) {
             return $th;
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
 
             return $this->simpleErrorResponse();
@@ -155,7 +162,8 @@ class PosterController extends Controller
     }
 
     /** Store poster data */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         try {
             $poster = new Poster;
 
@@ -184,11 +192,11 @@ class PosterController extends Controller
                 if ($request->file('image')) {
                     $imagePath = $request->file('image');
                     $imageName = $request->owner . time() . $imagePath->getClientOriginalName();
-          
+
                     $path = $request->file('image')->storeAs('images/posters', $imageName);
                 }
-    
-                $poster->image = env('APP_URL') . '/storage/app/images/posters/' . $imageName;      
+
+                $poster->image = env('APP_URL') . '/storage/app/images/posters/' . $imageName;
             }
 
             $poster->save();
@@ -196,7 +204,7 @@ class PosterController extends Controller
             return $this->simpleResponse($poster);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
 
             return $this->simpleErrorResponse();
@@ -204,7 +212,8 @@ class PosterController extends Controller
     }
 
     /** Update poster data */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         try {
             $poster = Poster::find($id);
 
@@ -229,7 +238,7 @@ class PosterController extends Controller
             return $this->simpleResponse($poster);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
 
             return $this->simpleErrorResponse();
@@ -237,7 +246,8 @@ class PosterController extends Controller
     }
 
     /** Show specific poster data */
-    public function show($id) {
+    public function show($id)
+    {
         try {
             $poster = Poster::with('user')->find($id);
 
@@ -248,24 +258,25 @@ class PosterController extends Controller
             return $this->simpleResponse($poster);
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
-            
+
             return $this->simpleErrorResponse();
         }
     }
 
     /** Delete data poster from database */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         try {
             Poster::destroy($id);
 
             return $this->simpleResponse($id, 'Poster was removed');
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
-                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
+                return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);
             }
-            
+
             return $this->simpleErrorResponse();
         }
     }

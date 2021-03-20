@@ -155,7 +155,7 @@ class UserController extends Controller
             
             $user->save();
 
-            return $this->simpleResponse($user, 'Data user was updated');   
+            return $this->simpleResponse($user, 'Data user was updated');  
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
                 return $this->getDatabaseErrorResponse($th->errorInfo[1], $th->errorInfo[2]);      
