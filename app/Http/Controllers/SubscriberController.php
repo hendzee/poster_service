@@ -27,7 +27,7 @@ class SubscriberController extends Controller
                 // Unsubscribe when item found
                 Subscriber::destroy($searchSubscriber->id);
 
-                return $this->simpleResponse($subscriber, 'Poster was unsubsribed');
+                return $this->simpleResponse($subscriber, 'Poster was unsubscribed');
             }
         } catch (\Throwable $th) {
             if (property_exists($th, 'errorInfo')) {
